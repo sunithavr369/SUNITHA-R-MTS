@@ -1,0 +1,198 @@
+Question 03:-
+============
+
+app.component.html:-
+
+<div class="container">
+  <h3>PRODUCT DETAILS</h3>
+
+  <form [formGroup]="myform" (ngSubmit)="stor()">
+    <div class="form-group">
+      <label for="pname">PRODUCT NAME</label>
+      <input type="text" class="form-Control" name="pname" formControlName="pname">
+      <small style="color: red" *ngIf="pname && pname.invalid && pname.touched">*PNAME IS REQUIRED</small>
+    </div>
+
+    <div class="form-group">
+      <label for="pbrand">PRODUCT BRAND</label>
+      <input type="text" class="form-Control" name="pbrand" formControlName="pbrand">
+      <div *ngIf="pbrand.touched && pbrand.invalid">
+      <small style="color: red" *ngIf="pbrand.errors.required">*PBRAND IS REQUIRED</small>
+      <small style="color: red" *ngIf="pbrand.errors.minlength">*PBRAND SHOULD BE MINIMUM 8 CHARACTERS</small>
+    </div>
+    </div>
+
+    <div class="form-group">
+      <label for="pbrand">PRODUCT PRICE</label>
+      <input type="text" class="form-Control" name="pprice" formControlName="pprice">
+      <div *ngIf="pprice.touched && pprice.invalid">
+      <small style="color: red" *ngIf="pprice.errors.required">*PPRICE IS REQUIRED</small>
+      <small style="color: red" *ngIf="pprice.errors.pattern">*PPRICE SHOULD BE NUMBERS ONLY</small>
+    </div>
+    </div>
+
+    <button class="btn btn-primary"[disabled]='myform.invalid'>Submit</button>
+  </form>
+</div>
+
+<div style="margin-top: 10px;">
+<div class="productdetails">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th>PRODUCT NAME</th>
+        <th>PRODUCT BRAND</th>
+        <th>PRODUCT PRICE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{pname}}</td>
+        <td>{{pbrand}}</td>
+        <td>{{pprice}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+app.component.ts:-
+
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+
+})
+export class AppComponent {
+  myform: FormGroup;
+  products: any[]=[];
+  pname:string;
+  pbrand:string;
+  pprice:number;
+
+  constructor(){
+    this.myform= new FormGroup({
+      pname:new FormControl(null,[Validators.required]),
+      pbrand:new FormControl(null,[Validators.required, Validators.minLength(8)]),
+      pprice:new FormControl(null,[Validators.required, Validators.pattern('[0-9]+')])
+    });
+
+  }
+
+  get name(){
+    return this.myform.get('pname');
+
+  }
+
+  get brand(){
+    return this.myform.get('pbrand');
+
+  }
+  get price(){
+    return this.myform.get('pprice');
+
+  }
+
+
+  store(){
+    this.products.push(this.myform.value.pname, this.myform.value.pbrand, this.myform.value.pprice);
+    console.log(this.products)
+    this.myform.reset();
+
+  }
+}
+
+Question 04:-
+=================
+app.component.html:
+
+<hr/>
+<div class="container">
+  <div class="panel panel-primary">
+    <h2 style="text-align: center;font-family: 'Courier New', Courier, monospace;font-size: 40px;color:black;">CUSTOMER DETAILS</h2>
+    
+    <div class="panel-body">
+      <form [formGroup]="storeform" (ngSubmit)="store()">
+  
+        <div class="form-group">
+          <label form="cusname">CUSTOMER NAME</label>
+          <input type="customername" class="form-control" id="cusname">
+        </div>
+        
+  <div class="form-group">
+    <label form="emailid">EMAIL ID</label>
+    <input type="email" class="form-control" id="emailid">
+  </div>
+
+  <div class="form-group">
+    <label form="mob">Mobile Number</label>
+    <input type="password" class="form-control" id="mob">
+  </div>
+
+  <button type="store" class="btn btn-primary">Store</button>
+
+</form>
+</div>
+<br/>
+<div class="panel-footer">
+    <div class="alert alert-primary" role="alert">
+        {{successMessage}}
+      </div>
+       
+</div>
+</div>
+</div>
+<hr/>
+
+app.component.ts:
+
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  storeform:FormGroup;
+   successMessage:string;
+   failMessage:string;
+   constructor(){
+     this.storeform=new FormGroup({
+       cusname:new FormControl("",Validators.required),
+       myemail:new FormControl("",[Validators.required]),
+       mob:new FormControl("",[Validators.required,Validators.minLength(10)])
+     });
+   }
+
+   get cusname(){
+     return this.storeform.get('cusname');
+   }
+   get myemail(){
+     return this.storeform.get('myemail');
+   }
+
+   get mob(){
+    return this.storeform.get('mob');
+  }
+
+  store(){
+    alert('successfully store....');
+    console.log(this.storeform.value.pwd);
+    console.log(this.storeform.value.myemail);
+    console.log(this.storeform.value.cusname);
+    
+    if(this.storeform.value.cusname=='A-Z' && this.storeform.value.myemail=='abc@gmail.com' && this.storeform.value.mob=='78910') {
+      console.log('inside  the  if');
+    this.successMessage="SUCCESSFULLY  STORE"
+    }else{
+      this.failMessage="INVALID";
+    }
+    this.storeform.reset();
+  }
+}
